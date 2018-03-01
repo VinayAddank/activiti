@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="activiti/rta/citizen">
+  <process id="DT" name="DT process" isExecutable="true">
+    <startEvent id="StartDT" name="Start"></startEvent>
+    <userTask id="general_details" name="general_details" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow1" sourceRef="StartDT" targetRef="general_details"></sequenceFlow>
+    <userTask id="slot_book" name="slot_book" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <endEvent id="EndDT" name="End"></endEvent>
+    <sequenceFlow id="flow7" sourceRef="slot_book" targetRef="EndDT"></sequenceFlow>
+    <userTask id="payment" name="payment" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow9" sourceRef="payment" targetRef="slot_book"></sequenceFlow>
+    <sequenceFlow id="flow12" sourceRef="general_details" targetRef="payment"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_DT">
+    <bpmndi:BPMNPlane bpmnElement="DT" id="BPMNPlane_DT">
+      <bpmndi:BPMNShape bpmnElement="StartDT" id="BPMNShape_StartDT">
+        <omgdc:Bounds height="35.0" width="35.0" x="70.0" y="170.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="general_details" id="BPMNShape_general_details">
+        <omgdc:Bounds height="55.0" width="105.0" x="150.0" y="160.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="slot_book" id="BPMNShape_slot_book">
+        <omgdc:Bounds height="55.0" width="105.0" x="640.0" y="160.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndDT" id="BPMNShape_EndDT">
+        <omgdc:Bounds height="35.0" width="35.0" x="820.0" y="170.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="payment" id="BPMNShape_payment">
+        <omgdc:Bounds height="55.0" width="105.0" x="460.0" y="160.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="105.0" y="187.0"></omgdi:waypoint>
+        <omgdi:waypoint x="150.0" y="187.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="745.0" y="187.0"></omgdi:waypoint>
+        <omgdi:waypoint x="820.0" y="187.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="565.0" y="187.0"></omgdi:waypoint>
+        <omgdi:waypoint x="640.0" y="187.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12">
+        <omgdi:waypoint x="255.0" y="187.0"></omgdi:waypoint>
+        <omgdi:waypoint x="460.0" y="187.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="activiti/rta/citizen">
+  <process id="FINREG" name="Financier Sign Up" isExecutable="true">
+    <startEvent id="startFINREG" name="Start"></startEvent>
+    <userTask id="finreg_form" name="finreg_form" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow1" sourceRef="startFINREG" targetRef="finreg_form"></sequenceFlow>
+    <userTask id="cco" name="cco" activiti:candidateGroups="ROLE_CCO"></userTask>
+    <userTask id="ao_rto" name="ao_rto" activiti:candidateGroups="ROLE_AO,ROLE_RTO"></userTask>
+    <sequenceFlow id="flow4" sourceRef="cco" targetRef="ao_rto"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow5" sourceRef="ao_rto" targetRef="exclusivegateway1"></sequenceFlow>
+    <endEvent id="endFINREG" name="End"></endEvent>
+    <sequenceFlow id="flow6" sourceRef="exclusivegateway1" targetRef="endFINREG">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ao_rto == "APPROVED"}]]></conditionExpression>
+    </sequenceFlow>
+    <endEvent id="terminate_ao_rto_FINREG" name="TerminateEndEvent">
+      <terminateEventDefinition></terminateEventDefinition>
+    </endEvent>
+    <sequenceFlow id="flow7" sourceRef="exclusivegateway1" targetRef="terminate_ao_rto_FINREG">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ao_rto == "REJECTED"}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="docs" name="docs" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow8" sourceRef="finreg_form" targetRef="docs"></sequenceFlow>
+    <sequenceFlow id="flow10" sourceRef="docs" targetRef="cco"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_FINREG">
+    <bpmndi:BPMNPlane bpmnElement="FINREG" id="BPMNPlane_FINREG">
+      <bpmndi:BPMNShape bpmnElement="startFINREG" id="BPMNShape_startFINREG">
+        <omgdc:Bounds height="35.0" width="35.0" x="20.0" y="180.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="finreg_form" id="BPMNShape_finreg_form">
+        <omgdc:Bounds height="55.0" width="105.0" x="80.0" y="170.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="cco" id="BPMNShape_cco">
+        <omgdc:Bounds height="55.0" width="105.0" x="520.0" y="170.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ao_rto" id="BPMNShape_ao_rto">
+        <omgdc:Bounds height="55.0" width="105.0" x="670.0" y="170.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="820.0" y="177.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endFINREG" id="BPMNShape_endFINREG">
+        <omgdc:Bounds height="35.0" width="35.0" x="940.0" y="180.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="terminate_ao_rto_FINREG" id="BPMNShape_terminate_ao_rto_FINREG">
+        <omgdc:Bounds height="35.0" width="35.0" x="823.0" y="270.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="docs" id="BPMNShape_docs">
+        <omgdc:Bounds height="55.0" width="105.0" x="222.0" y="170.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="55.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="80.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="625.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="670.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="775.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="820.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="860.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="940.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="840.0" y="217.0"></omgdi:waypoint>
+        <omgdi:waypoint x="840.0" y="270.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="185.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="222.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
+        <omgdi:waypoint x="327.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="520.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

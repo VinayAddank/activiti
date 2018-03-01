@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="activiti/rta/citizen">
+  <process id="DLIN" name="Driving License DLINFO" isExecutable="true">
+    <startEvent id="startDLIN" name="Start"></startEvent>
+    <userTask id="license_details" name="license_details" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow1" sourceRef="startDLIN" targetRef="license_details"></sequenceFlow>
+    <userTask id="payment" name="payment" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow2" sourceRef="license_details" targetRef="payment"></sequenceFlow>
+    <userTask id="dlin_form" name="dlin_form" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow3" sourceRef="payment" targetRef="dlin_form"></sequenceFlow>
+    <userTask id="cco" name="cco" activiti:candidateGroups="ROLE_CCO"></userTask>
+    <sequenceFlow id="flow5" sourceRef="dlin_form" targetRef="cco"></sequenceFlow>
+    <userTask id="ao_rto" name="ao_rto" activiti:candidateGroups="ROLE_AO,ROLE_RTO"></userTask>
+    <sequenceFlow id="flow6" sourceRef="cco" targetRef="ao_rto"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow7" sourceRef="ao_rto" targetRef="exclusivegateway1"></sequenceFlow>
+    <endEvent id="endDLIN" name="End"></endEvent>
+    <sequenceFlow id="flow8" sourceRef="exclusivegateway1" targetRef="endDLIN">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ao_rto == "APPROVED"}]]></conditionExpression>
+    </sequenceFlow>
+    <endEvent id="terminat_ao_rto_DLIN" name="TerminateEndEvent">
+      <terminateEventDefinition></terminateEventDefinition>
+    </endEvent>
+    <sequenceFlow id="flow9" sourceRef="exclusivegateway1" targetRef="terminat_ao_rto_DLIN">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ao_rto == "REJECTED"}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_DLIN">
+    <bpmndi:BPMNPlane bpmnElement="DLIN" id="BPMNPlane_DLIN">
+      <bpmndi:BPMNShape bpmnElement="startDLIN" id="BPMNShape_startDLIN">
+        <omgdc:Bounds height="35.0" width="35.0" x="50.0" y="160.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="license_details" id="BPMNShape_license_details">
+        <omgdc:Bounds height="55.0" width="105.0" x="130.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="payment" id="BPMNShape_payment">
+        <omgdc:Bounds height="55.0" width="105.0" x="280.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="dlin_form" id="BPMNShape_dlin_form">
+        <omgdc:Bounds height="55.0" width="105.0" x="430.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="cco" id="BPMNShape_cco">
+        <omgdc:Bounds height="55.0" width="105.0" x="580.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ao_rto" id="BPMNShape_ao_rto">
+        <omgdc:Bounds height="55.0" width="105.0" x="730.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="880.0" y="158.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endDLIN" id="BPMNShape_endDLIN">
+        <omgdc:Bounds height="35.0" width="35.0" x="965.0" y="161.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="terminat_ao_rto_DLIN" id="BPMNShape_terminat_ao_rto_DLIN">
+        <omgdc:Bounds height="35.0" width="35.0" x="883.0" y="250.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="85.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="130.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="235.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="280.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="385.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="430.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="535.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="580.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="685.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="730.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="835.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="880.0" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="920.0" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="965.0" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="900.0" y="198.0"></omgdi:waypoint>
+        <omgdi:waypoint x="900.0" y="250.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

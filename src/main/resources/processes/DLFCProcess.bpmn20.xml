@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="activiti/rta/citizen">
+  <process id="DLFC" name="DL Foreign Citizen" isExecutable="true">
+    <startEvent id="startDLFC" name="Start"></startEvent>
+    <userTask id="payment" name="payment" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <userTask id="dlfc_form" name="dlfc_form" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow2" sourceRef="payment" targetRef="dlfc_form"></sequenceFlow>
+    <userTask id="cco" name="cco" activiti:candidateGroups="ROLE_CCO"></userTask>
+    <sequenceFlow id="flow5" sourceRef="dlfc_form" targetRef="cco"></sequenceFlow>
+    <userTask id="ao_rto" name="ao_rto" activiti:candidateGroups="ROLE_AO,ROLE_RTO"></userTask>
+    <sequenceFlow id="flow7" sourceRef="cco" targetRef="ao_rto"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow8" sourceRef="ao_rto" targetRef="exclusivegateway2"></sequenceFlow>
+    <endEvent id="terminate_ao_rtoDLFC" name="TerminateEndEvent">
+      <terminateEventDefinition></terminateEventDefinition>
+    </endEvent>
+    <sequenceFlow id="flow10" sourceRef="exclusivegateway2" targetRef="terminate_ao_rtoDLFC">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ao_rto == "REJECTED"}]]></conditionExpression>
+    </sequenceFlow>
+    <endEvent id="endDLFC" name="End"></endEvent>
+    <sequenceFlow id="flow11" sourceRef="exclusivegateway2" targetRef="endDLFC">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ao_rto == "APPROVED"}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="cov_details" name="cov_details" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow12" sourceRef="startDLFC" targetRef="cov_details"></sequenceFlow>
+    <sequenceFlow id="flow13" sourceRef="cov_details" targetRef="payment"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_DLFC">
+    <bpmndi:BPMNPlane bpmnElement="DLFC" id="BPMNPlane_DLFC">
+      <bpmndi:BPMNShape bpmnElement="startDLFC" id="BPMNShape_startDLFC">
+        <omgdc:Bounds height="35.0" width="35.0" x="40.0" y="180.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="payment" id="BPMNShape_payment">
+        <omgdc:Bounds height="55.0" width="105.0" x="410.0" y="170.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="dlfc_form" id="BPMNShape_dlfc_form">
+        <omgdc:Bounds height="55.0" width="105.0" x="570.0" y="170.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="cco" id="BPMNShape_cco">
+        <omgdc:Bounds height="55.0" width="105.0" x="730.0" y="168.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ao_rto" id="BPMNShape_ao_rto">
+        <omgdc:Bounds height="55.0" width="105.0" x="880.0" y="170.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="1037.0" y="177.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="terminate_ao_rtoDLFC" id="BPMNShape_terminate_ao_rtoDLFC">
+        <omgdc:Bounds height="35.0" width="35.0" x="1040.0" y="260.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endDLFC" id="BPMNShape_endDLFC">
+        <omgdc:Bounds height="35.0" width="35.0" x="1150.0" y="180.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="cov_details" id="BPMNShape_cov_details">
+        <omgdc:Bounds height="55.0" width="105.0" x="120.0" y="170.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="515.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="570.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="675.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="730.0" y="195.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="835.0" y="195.0"></omgdi:waypoint>
+        <omgdi:waypoint x="880.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="985.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1037.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
+        <omgdi:waypoint x="1057.0" y="217.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1057.0" y="260.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11">
+        <omgdi:waypoint x="1077.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1150.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12">
+        <omgdi:waypoint x="75.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="120.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow13" id="BPMNEdge_flow13">
+        <omgdi:waypoint x="225.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="410.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

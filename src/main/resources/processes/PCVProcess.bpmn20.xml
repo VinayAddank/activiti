@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="activiti/rta/citizen">
+  <process id="PCV" name="Permit Variations Process" isExecutable="true">
+    <startEvent id="startPCV" name="Start"></startEvent>
+    <userTask id="general_details" name="general_details" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow1" sourceRef="startPCV" targetRef="general_details"></sequenceFlow>
+    <userTask id="pcv_form" name="pcv_form" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow2" sourceRef="general_details" targetRef="pcv_form"></sequenceFlow>
+    <userTask id="payment" name="payment" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <endEvent id="endPCV" name="End"></endEvent>
+    <sequenceFlow id="flow6" sourceRef="payment" targetRef="endPCV"></sequenceFlow>
+    <sequenceFlow id="flow7" sourceRef="pcv_form" targetRef="payment"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_PCV">
+    <bpmndi:BPMNPlane bpmnElement="PCV" id="BPMNPlane_PCV">
+      <bpmndi:BPMNShape bpmnElement="startPCV" id="BPMNShape_startPCV">
+        <omgdc:Bounds height="35.0" width="35.0" x="60.0" y="160.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="general_details" id="BPMNShape_general_details">
+        <omgdc:Bounds height="55.0" width="105.0" x="140.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="pcv_form" id="BPMNShape_pcv_form">
+        <omgdc:Bounds height="55.0" width="105.0" x="290.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="payment" id="BPMNShape_payment">
+        <omgdc:Bounds height="55.0" width="105.0" x="480.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endPCV" id="BPMNShape_endPCV">
+        <omgdc:Bounds height="35.0" width="35.0" x="670.0" y="160.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="95.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="140.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="245.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="290.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="585.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="670.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="395.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="480.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

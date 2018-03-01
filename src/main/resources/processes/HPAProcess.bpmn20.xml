@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="activiti/rta/citizen">
+  <process id="HPA" name="HPA process" isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <userTask id="general_details" name="general_details" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="general_details"></sequenceFlow>
+    <userTask id="hpa_form" name="hpa_form" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow2" sourceRef="general_details" targetRef="hpa_form"></sequenceFlow>
+    <userTask id="payment" name="payment" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <userTask id="approve_financier" name="approve_financier" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow4" sourceRef="payment" targetRef="approve_financier"></sequenceFlow>
+    <userTask id="finance_details" name="finance_details" activiti:candidateGroups="ROLE_ONLINE_FINANCER"></userTask>
+    <sequenceFlow id="flow5" sourceRef="approve_financier" targetRef="finance_details"></sequenceFlow>
+    <userTask id="cco" name="cco" activiti:candidateGroups="ROLE_CCO"></userTask>
+    <userTask id="ao_rto" name="ao_rto" activiti:candidateGroups="ROLE_AO,ROLE_RTO"></userTask>
+    <sequenceFlow id="flow7" sourceRef="cco" targetRef="ao_rto"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow9" sourceRef="ao_rto" targetRef="exclusivegateway1"></sequenceFlow>
+    <endEvent id="EndHPA" name="End"></endEvent>
+    <sequenceFlow id="flow10" sourceRef="exclusivegateway1" targetRef="EndHPA">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ao_rto == "APPROVED"}]]></conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow12" sourceRef="finance_details" targetRef="exclusivegateway2"></sequenceFlow>
+    <sequenceFlow id="flow14" sourceRef="exclusivegateway2" targetRef="cco">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${finance_details == "APPROVED"}]]></conditionExpression>
+    </sequenceFlow>
+    <endEvent id="terminateend_FINANCER" name="TerminateEndEvent">
+      <terminateEventDefinition></terminateEventDefinition>
+    </endEvent>
+    <sequenceFlow id="flow19" sourceRef="exclusivegateway2" targetRef="terminateend_FINANCER">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${finance_details == "REJECTED"}]]></conditionExpression>
+    </sequenceFlow>
+    <endEvent id="terminateend_AO_RTO" name="TerminateEndEvent">
+      <terminateEventDefinition></terminateEventDefinition>
+    </endEvent>
+    <sequenceFlow id="flow20" sourceRef="exclusivegateway1" targetRef="terminateend_AO_RTO">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ao_rto == "REJECTED"}]]></conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway id="exclusivegateway3" name="Exclusive Gateway" default="payment_path"></exclusiveGateway>
+    <sequenceFlow id="flow21" sourceRef="hpa_form" targetRef="exclusivegateway3"></sequenceFlow>
+    <sequenceFlow id="payment_path" sourceRef="exclusivegateway3" targetRef="payment"></sequenceFlow>
+    <sequenceFlow id="no_payment_path" sourceRef="exclusivegateway3" targetRef="approve_financier">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${iteration > 1}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_HPA">
+    <bpmndi:BPMNPlane bpmnElement="HPA" id="BPMNPlane_HPA">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="50.0" y="220.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="general_details" id="BPMNShape_general_details">
+        <omgdc:Bounds height="55.0" width="105.0" x="130.0" y="210.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="hpa_form" id="BPMNShape_hpa_form">
+        <omgdc:Bounds height="55.0" width="105.0" x="250.0" y="210.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="payment" id="BPMNShape_payment">
+        <omgdc:Bounds height="55.0" width="105.0" x="460.0" y="210.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approve_financier" id="BPMNShape_approve_financier">
+        <omgdc:Bounds height="55.0" width="105.0" x="580.0" y="210.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="finance_details" id="BPMNShape_finance_details">
+        <omgdc:Bounds height="55.0" width="105.0" x="730.0" y="210.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="cco" id="BPMNShape_cco">
+        <omgdc:Bounds height="55.0" width="105.0" x="1010.0" y="211.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ao_rto" id="BPMNShape_ao_rto">
+        <omgdc:Bounds height="55.0" width="105.0" x="1160.0" y="211.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="1310.0" y="218.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndHPA" id="BPMNShape_EndHPA">
+        <omgdc:Bounds height="35.0" width="35.0" x="1410.0" y="221.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="880.0" y="218.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="terminateend_FINANCER" id="BPMNShape_terminateend_FINANCER">
+        <omgdc:Bounds height="35.0" width="35.0" x="883.0" y="130.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="terminateend_AO_RTO" id="BPMNShape_terminateend_AO_RTO">
+        <omgdc:Bounds height="35.0" width="35.0" x="1313.0" y="300.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway3" id="BPMNShape_exclusivegateway3">
+        <omgdc:Bounds height="40.0" width="40.0" x="388.0" y="130.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="85.0" y="237.0"></omgdi:waypoint>
+        <omgdi:waypoint x="130.0" y="237.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="235.0" y="237.0"></omgdi:waypoint>
+        <omgdi:waypoint x="250.0" y="237.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="565.0" y="237.0"></omgdi:waypoint>
+        <omgdi:waypoint x="580.0" y="237.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="685.0" y="237.0"></omgdi:waypoint>
+        <omgdi:waypoint x="730.0" y="237.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="1115.0" y="238.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1160.0" y="238.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="1265.0" y="238.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1310.0" y="238.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
+        <omgdi:waypoint x="1350.0" y="238.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1410.0" y="238.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12">
+        <omgdi:waypoint x="835.0" y="237.0"></omgdi:waypoint>
+        <omgdi:waypoint x="880.0" y="238.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow14" id="BPMNEdge_flow14">
+        <omgdi:waypoint x="920.0" y="238.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1010.0" y="238.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow19" id="BPMNEdge_flow19">
+        <omgdi:waypoint x="900.0" y="218.0"></omgdi:waypoint>
+        <omgdi:waypoint x="900.0" y="165.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow20" id="BPMNEdge_flow20">
+        <omgdi:waypoint x="1330.0" y="258.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1330.0" y="300.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow21" id="BPMNEdge_flow21">
+        <omgdi:waypoint x="302.0" y="210.0"></omgdi:waypoint>
+        <omgdi:waypoint x="302.0" y="150.0"></omgdi:waypoint>
+        <omgdi:waypoint x="388.0" y="150.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="payment_path" id="BPMNEdge_payment_path">
+        <omgdi:waypoint x="408.0" y="170.0"></omgdi:waypoint>
+        <omgdi:waypoint x="407.0" y="237.0"></omgdi:waypoint>
+        <omgdi:waypoint x="460.0" y="237.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="no_payment_path" id="BPMNEdge_no_payment_path">
+        <omgdi:waypoint x="428.0" y="150.0"></omgdi:waypoint>
+        <omgdi:waypoint x="632.0" y="150.0"></omgdi:waypoint>
+        <omgdi:waypoint x="632.0" y="210.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

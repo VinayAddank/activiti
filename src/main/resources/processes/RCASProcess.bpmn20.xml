@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="activiti/rta/citizen">
+  <process id="RCAS" name="RC Aadhar Seeding Process" isExecutable="true">
+    <startEvent id="startRCAS" name="Start"></startEvent>
+    <userTask id="rcas_form" name="rcas_form" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow1" sourceRef="startRCAS" targetRef="rcas_form"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow2" sourceRef="rcas_form" targetRef="exclusivegateway1"></sequenceFlow>
+    <endEvent id="end_auto_RCAS" name="End"></endEvent>
+    <sequenceFlow id="flow3" sourceRef="exclusivegateway1" targetRef="end_auto_RCAS">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${autoApproved == true}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="docs" name="docs" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="docs">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${autoApproved == false}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="cco" name="cco" activiti:candidateGroups="ROLE_CCO"></userTask>
+    <sequenceFlow id="flow5" sourceRef="docs" targetRef="cco"></sequenceFlow>
+    <userTask id="ao" name="ao" activiti:candidateGroups="ROLE_AO"></userTask>
+    <sequenceFlow id="flow6" sourceRef="cco" targetRef="ao"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow7" sourceRef="ao" targetRef="exclusivegateway2"></sequenceFlow>
+    <endEvent id="endRCAS" name="End"></endEvent>
+    <sequenceFlow id="flow8" sourceRef="exclusivegateway2" targetRef="endRCAS">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ao == "APPROVED"}]]></conditionExpression>
+    </sequenceFlow>
+    <endEvent id="terminate_ao_RCAS" name="TerminateEndEvent">
+      <terminateEventDefinition></terminateEventDefinition>
+    </endEvent>
+    <sequenceFlow id="flow9" sourceRef="exclusivegateway2" targetRef="terminate_ao_RCAS">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ao == "REJECTED"}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_RCAS">
+    <bpmndi:BPMNPlane bpmnElement="RCAS" id="BPMNPlane_RCAS">
+      <bpmndi:BPMNShape bpmnElement="startRCAS" id="BPMNShape_startRCAS">
+        <omgdc:Bounds height="35.0" width="35.0" x="30.0" y="240.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="rcas_form" id="BPMNShape_rcas_form">
+        <omgdc:Bounds height="55.0" width="105.0" x="110.0" y="230.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="260.0" y="238.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end_auto_RCAS" id="BPMNShape_end_auto_RCAS">
+        <omgdc:Bounds height="35.0" width="35.0" x="263.0" y="340.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="docs" id="BPMNShape_docs">
+        <omgdc:Bounds height="55.0" width="105.0" x="345.0" y="231.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="cco" id="BPMNShape_cco">
+        <omgdc:Bounds height="55.0" width="105.0" x="495.0" y="231.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ao" id="BPMNShape_ao">
+        <omgdc:Bounds height="55.0" width="105.0" x="645.0" y="231.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="795.0" y="239.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endRCAS" id="BPMNShape_endRCAS">
+        <omgdc:Bounds height="35.0" width="35.0" x="880.0" y="242.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="terminate_ao_RCAS" id="BPMNShape_terminate_ao_RCAS">
+        <omgdc:Bounds height="35.0" width="35.0" x="798.0" y="340.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="65.0" y="257.0"></omgdi:waypoint>
+        <omgdi:waypoint x="110.0" y="257.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="215.0" y="257.0"></omgdi:waypoint>
+        <omgdi:waypoint x="260.0" y="258.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="280.0" y="278.0"></omgdi:waypoint>
+        <omgdi:waypoint x="280.0" y="340.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="300.0" y="258.0"></omgdi:waypoint>
+        <omgdi:waypoint x="345.0" y="258.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="450.0" y="258.0"></omgdi:waypoint>
+        <omgdi:waypoint x="495.0" y="258.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="600.0" y="258.0"></omgdi:waypoint>
+        <omgdi:waypoint x="645.0" y="258.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="750.0" y="258.0"></omgdi:waypoint>
+        <omgdi:waypoint x="795.0" y="259.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="835.0" y="259.0"></omgdi:waypoint>
+        <omgdi:waypoint x="880.0" y="259.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="815.0" y="279.0"></omgdi:waypoint>
+        <omgdi:waypoint x="815.0" y="340.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

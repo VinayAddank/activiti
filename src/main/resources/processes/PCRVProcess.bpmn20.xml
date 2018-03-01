@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="activiti/rta/citizen">
+  <process id="PCRV" name="Permit Replacement of Vehicle" isExecutable="true">
+    <startEvent id="startPCRV" name="Start"></startEvent>
+    <userTask id="general_details" name="general_details" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow1" sourceRef="startPCRV" targetRef="general_details"></sequenceFlow>
+    <userTask id="pcrv_form" name="pcrv_form" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow2" sourceRef="general_details" targetRef="pcrv_form"></sequenceFlow>
+    <userTask id="general_details_old" name="general_details_old" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow4" sourceRef="pcrv_form" targetRef="general_details_old"></sequenceFlow>
+    <userTask id="payment" name="payment" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow5" sourceRef="general_details_old" targetRef="payment"></sequenceFlow>
+    <endEvent id="endPCRV" name="End"></endEvent>
+    <sequenceFlow id="flow6" sourceRef="payment" targetRef="endPCRV"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_PCRV">
+    <bpmndi:BPMNPlane bpmnElement="PCRV" id="BPMNPlane_PCRV">
+      <bpmndi:BPMNShape bpmnElement="startPCRV" id="BPMNShape_startPCRV">
+        <omgdc:Bounds height="35.0" width="35.0" x="60.0" y="160.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="general_details" id="BPMNShape_general_details">
+        <omgdc:Bounds height="55.0" width="105.0" x="140.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="pcrv_form" id="BPMNShape_pcrv_form">
+        <omgdc:Bounds height="55.0" width="105.0" x="290.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="general_details_old" id="BPMNShape_general_details_old">
+        <omgdc:Bounds height="55.0" width="105.0" x="440.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="payment" id="BPMNShape_payment">
+        <omgdc:Bounds height="55.0" width="105.0" x="590.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endPCRV" id="BPMNShape_endPCRV">
+        <omgdc:Bounds height="35.0" width="35.0" x="740.0" y="160.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="95.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="140.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="245.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="290.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="395.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="440.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="545.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="590.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="695.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="740.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

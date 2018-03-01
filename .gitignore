@@ -1,0 +1,21 @@
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# Eclipse specific
+.project
+.metadata
+.classpath
+.settings/
+
+# Maven specific
+target/
+
+# Spring specific
+.springBeans
+
+# Log files
+*.log

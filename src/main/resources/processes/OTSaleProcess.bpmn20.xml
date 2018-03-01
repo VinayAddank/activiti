@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="activiti/rta/citizen">
+  <process id="OTS" name="Transfer of Ownership type Sale" isExecutable="true">
+    <startEvent id="OTSaleStart" name="Start"></startEvent>
+    <userTask id="general_details" name="general_details" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow1" sourceRef="OTSaleStart" targetRef="general_details"></sequenceFlow>
+    <userTask id="claim_token" name="claim_token" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <userTask id="general_details_buyer" name="general_details_buyer" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow4" sourceRef="claim_token" targetRef="general_details_buyer"></sequenceFlow>
+    <userTask id="ots_form" name="ots_form" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow12" sourceRef="general_details_buyer" targetRef="ots_form"></sequenceFlow>
+    <userTask id="approve_buyer" name="approve_buyer" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <userTask id="cco" name="cco" activiti:candidateGroups="ROLE_CCO"></userTask>
+    <userTask id="ao_rto" name="ao_rto" activiti:candidateGroups="ROLE_AO,ROLE_RTO"></userTask>
+    <endEvent id="OTSaleEnd" name="End"></endEvent>
+    <exclusiveGateway id="approve_buyer_action" name="Exclusive Gateway approve_buyer"></exclusiveGateway>
+    <sequenceFlow id="flow37" sourceRef="approve_buyer" targetRef="approve_buyer_action"></sequenceFlow>
+    <endEvent id="terminate_seller_rejected_buyer" name="TerminateEndEvent">
+      <terminateEventDefinition></terminateEventDefinition>
+    </endEvent>
+    <sequenceFlow id="flow39" sourceRef="approve_buyer_action" targetRef="terminate_seller_rejected_buyer">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approve_buyer == "REJECTED"}]]></conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway id="ao_rto_action" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow40" sourceRef="ao_rto" targetRef="ao_rto_action"></sequenceFlow>
+    <sequenceFlow id="flow41" sourceRef="ao_rto_action" targetRef="OTSaleEnd">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ao_rto == "APPROVED"}]]></conditionExpression>
+    </sequenceFlow>
+    <endEvent id="terminate_ao_rto_OTS" name="TerminateEndEvent">
+      <terminateEventDefinition></terminateEventDefinition>
+    </endEvent>
+    <sequenceFlow id="flow42" sourceRef="ao_rto_action" targetRef="terminate_ao_rto_OTS">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ao_rto == "REJECTED"}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="generate_token" name="generate_token" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow52" sourceRef="generate_token" targetRef="claim_token"></sequenceFlow>
+    <userTask id="payment_buyer" name="payment_buyer" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow65" sourceRef="general_details" targetRef="exclusivegateway1"></sequenceFlow>
+    <userTask id="payment" name="payment" activiti:candidateGroups="ROLE_CITIZEN"></userTask>
+    <sequenceFlow id="flow66" sourceRef="exclusivegateway1" targetRef="payment">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPayment == true}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow67" sourceRef="payment" targetRef="generate_token"></sequenceFlow>
+    <sequenceFlow id="flow68" sourceRef="exclusivegateway1" targetRef="generate_token">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPayment == false}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow76" sourceRef="payment_buyer" targetRef="approve_buyer"></sequenceFlow>
+    <sequenceFlow id="flow78" sourceRef="approve_buyer_action" targetRef="cco"></sequenceFlow>
+    <sequenceFlow id="flow79" sourceRef="cco" targetRef="ao_rto"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway" default="payment_path"></exclusiveGateway>
+    <sequenceFlow id="flow80" sourceRef="ots_form" targetRef="exclusivegateway2"></sequenceFlow>
+    <sequenceFlow id="payment_path" sourceRef="exclusivegateway2" targetRef="payment_buyer"></sequenceFlow>
+    <sequenceFlow id="no_payment_path" sourceRef="exclusivegateway2" targetRef="approve_buyer">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${iteration > 1}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_OTS">
+    <bpmndi:BPMNPlane bpmnElement="OTS" id="BPMNPlane_OTS">
+      <bpmndi:BPMNShape bpmnElement="OTSaleStart" id="BPMNShape_OTSaleStart">
+        <omgdc:Bounds height="35.0" width="35.0" x="64.0" y="57.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="general_details" id="BPMNShape_general_details">
+        <omgdc:Bounds height="55.0" width="105.0" x="29.0" y="120.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="claim_token" id="BPMNShape_claim_token">
+        <omgdc:Bounds height="55.0" width="105.0" x="440.0" y="211.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="general_details_buyer" id="BPMNShape_general_details_buyer">
+        <omgdc:Bounds height="55.0" width="105.0" x="590.0" y="211.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ots_form" id="BPMNShape_ots_form">
+        <omgdc:Bounds height="55.0" width="105.0" x="740.0" y="211.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approve_buyer" id="BPMNShape_approve_buyer">
+        <omgdc:Bounds height="55.0" width="105.0" x="1161.0" y="211.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="cco" id="BPMNShape_cco">
+        <omgdc:Bounds height="55.0" width="105.0" x="1570.0" y="211.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ao_rto" id="BPMNShape_ao_rto">
+        <omgdc:Bounds height="55.0" width="105.0" x="1780.0" y="213.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="OTSaleEnd" id="BPMNShape_OTSaleEnd">
+        <omgdc:Bounds height="35.0" width="35.0" x="2030.0" y="223.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approve_buyer_action" id="BPMNShape_approve_buyer_action">
+        <omgdc:Bounds height="40.0" width="40.0" x="1336.0" y="218.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="terminate_seller_rejected_buyer" id="BPMNShape_terminate_seller_rejected_buyer">
+        <omgdc:Bounds height="35.0" width="35.0" x="1339.0" y="308.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ao_rto_action" id="BPMNShape_ao_rto_action">
+        <omgdc:Bounds height="40.0" width="40.0" x="1935.0" y="221.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="terminate_ao_rto_OTS" id="BPMNShape_terminate_ao_rto_OTS">
+        <omgdc:Bounds height="35.0" width="35.0" x="1938.0" y="300.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="generate_token" id="BPMNShape_generate_token">
+        <omgdc:Bounds height="55.0" width="105.0" x="260.0" y="211.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="payment_buyer" id="BPMNShape_payment_buyer">
+        <omgdc:Bounds height="55.0" width="105.0" x="1010.0" y="211.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="179.0" y="128.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="payment" id="BPMNShape_payment">
+        <omgdc:Bounds height="55.0" width="105.0" x="260.0" y="121.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="890.0" y="219.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="81.0" y="92.0"></omgdi:waypoint>
+        <omgdi:waypoint x="81.0" y="120.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="545.0" y="238.0"></omgdi:waypoint>
+        <omgdi:waypoint x="590.0" y="238.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12">
+        <omgdi:waypoint x="695.0" y="238.0"></omgdi:waypoint>
+        <omgdi:waypoint x="740.0" y="238.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow37" id="BPMNEdge_flow37">
+        <omgdi:waypoint x="1266.0" y="238.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1336.0" y="238.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow39" id="BPMNEdge_flow39">
+        <omgdi:waypoint x="1356.0" y="258.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1356.0" y="308.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow40" id="BPMNEdge_flow40">
+        <omgdi:waypoint x="1885.0" y="240.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1935.0" y="241.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow41" id="BPMNEdge_flow41">
+        <omgdi:waypoint x="1975.0" y="241.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2030.0" y="240.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow42" id="BPMNEdge_flow42">
+        <omgdi:waypoint x="1955.0" y="261.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1955.0" y="300.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow52" id="BPMNEdge_flow52">
+        <omgdi:waypoint x="365.0" y="238.0"></omgdi:waypoint>
+        <omgdi:waypoint x="440.0" y="238.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow65" id="BPMNEdge_flow65">
+        <omgdi:waypoint x="134.0" y="147.0"></omgdi:waypoint>
+        <omgdi:waypoint x="179.0" y="148.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow66" id="BPMNEdge_flow66">
+        <omgdi:waypoint x="219.0" y="148.0"></omgdi:waypoint>
+        <omgdi:waypoint x="260.0" y="148.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow67" id="BPMNEdge_flow67">
+        <omgdi:waypoint x="312.0" y="176.0"></omgdi:waypoint>
+        <omgdi:waypoint x="312.0" y="211.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow68" id="BPMNEdge_flow68">
+        <omgdi:waypoint x="199.0" y="168.0"></omgdi:waypoint>
+        <omgdi:waypoint x="199.0" y="238.0"></omgdi:waypoint>
+        <omgdi:waypoint x="260.0" y="238.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow76" id="BPMNEdge_flow76">
+        <omgdi:waypoint x="1115.0" y="238.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1161.0" y="238.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow78" id="BPMNEdge_flow78">
+        <omgdi:waypoint x="1376.0" y="238.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1570.0" y="238.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow79" id="BPMNEdge_flow79">
+        <omgdi:waypoint x="1675.0" y="238.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1780.0" y="240.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow80" id="BPMNEdge_flow80">
+        <omgdi:waypoint x="845.0" y="238.0"></omgdi:waypoint>
+        <omgdi:waypoint x="890.0" y="239.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="payment_path" id="BPMNEdge_payment_path">
+        <omgdi:waypoint x="930.0" y="239.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1010.0" y="238.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="no_payment_path" id="BPMNEdge_no_payment_path">
+        <omgdi:waypoint x="910.0" y="259.0"></omgdi:waypoint>
+        <omgdi:waypoint x="910.0" y="313.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1034.0" y="313.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1213.0" y="313.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1213.0" y="266.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
